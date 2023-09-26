@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+bun run pretty-quick -- --staged && exec < /dev/tty && ./safe-commit.sh
