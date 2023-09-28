@@ -1,7 +1,7 @@
-import { Schema, model, models, Document } from 'mongoose'
+import { Schema, model, models } from 'mongoose'
 import Bun from 'bun'
 
-export interface IUser extends Document {
+export interface IUser {
   email: string
   username: string
   password: string
@@ -20,6 +20,7 @@ export const passwordRegexpError =
   'Password invalid, it should contain at least one letter, one number and one special character'
 
 interface IUserModel extends IUser {
+  isModified(arg0: string): unknown
   comparePassword(password: string): Promise<boolean>
 }
 
@@ -44,8 +45,8 @@ const UserSchema = new Schema<IUserModel>({
   },
 })
 
-UserSchema.pre<IUserModel>('save', async function (next) {
-  const user: IUser = this
+UserSchema.pre<IUserModel>('save', async function (this: IUserModel, next) {
+  const user = this
 
   if (!user.isModified('password')) return next()
 

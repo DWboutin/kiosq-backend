@@ -10,7 +10,7 @@ export class MongoDBConnector implements DBConnector {
     this.initConnection(this.getDBUri())
   }
 
-  private getDBUri() {
+  public getDBUri() {
     const dbUri = EnvVariableGetter.get('MONGODB_URI')
     const dbUsername = EnvVariableGetter.get('MONGODB_USERNAME')
     const dbPassword = EnvVariableGetter.get('MONGODB_PASSWORD')
@@ -22,7 +22,7 @@ export class MongoDBConnector implements DBConnector {
       .replace('<dbName>', dbName)
   }
 
-  private async initConnection(uri: string) {
+  public async initConnection(uri: string) {
     try {
       await mongoose.connect(uri, {
         dbName: 'kiosq',
@@ -33,5 +33,11 @@ export class MongoDBConnector implements DBConnector {
     } catch (error) {
       console.error('MongoDB connection error:', error)
     }
+  }
+
+  public async disconnect() {
+    await mongoose.disconnect()
+
+    this.isConnected = false
   }
 }
