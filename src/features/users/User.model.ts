@@ -1,10 +1,16 @@
-import { Schema, model, models } from 'mongoose'
+import { Document, Model, Schema, model, models } from 'mongoose'
 import Bun from 'bun'
 
 export interface IUser {
   email: string
   username: string
   password: string
+}
+
+export interface IUserDocument extends IUser, Document {
+  createdAt: Date
+  updatedAt: Date
+  comparePassword(password: string): Promise<boolean>
 }
 
 export const usernameRegexp =
@@ -19,12 +25,14 @@ export const passwordRegexp =
 export const passwordRegexpError =
   'Password invalid, it should contain at least one letter, one number and one special character'
 
-interface IUserModel extends IUser {
+type IUserMethods = {
   isModified(arg0: string): unknown
   comparePassword(password: string): Promise<boolean>
 }
 
-const UserSchema = new Schema<IUserModel>({
+export type TUserModel = Model<IUser, {}, IUserMethods>
+
+const userSchema = new Schema<IUser, TUserModel, IUserMethods>({
   email: {
     type: String,
     unique: true,
@@ -45,23 +53,24 @@ const UserSchema = new Schema<IUserModel>({
   },
 })
 
-UserSchema.pre<IUserModel>('save', async function (this: IUserModel, next) {
+userSchema.pre('save', async function (this: IUserDocument, next) {
   const user = this
 
   if (!user.isModified('password')) return next()
 
-  const hash = await Bun.password.hash(user.password)
+  const hash = await Bun.password.hash(user.password, {
+    algorithm: 'bcrypt',
+    cost: 4,
+  })
 
   user.password = hash
   next()
 })
 
-UserSchema.methods.comparePassword = async function (
-  password: string,
-): Promise<boolean> {
-  const hash = await Bun.password.hash(password)
+userSchema.method('comparePassword', async function (password: string) {
+  const user = this as IUserDocument
 
-  return await Bun.password.verify(hash, this.password)
-}
+  return await Bun.password.verify(password, user.password)
+})
 
-export const UserModel = models.User || model<IUserModel>('User', UserSchema)
+export const UserModel = model<IUser, TUserModel>('User', userSchema)

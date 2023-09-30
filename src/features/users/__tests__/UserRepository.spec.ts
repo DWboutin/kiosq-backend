@@ -16,7 +16,6 @@ describe('UserRepository', () => {
 
   afterAll(async () => {
     await mongod.stop()
-    mongod.cleanup()
   })
 
   it('should create a new user', async (done) => {
@@ -33,6 +32,7 @@ describe('UserRepository', () => {
     expect(newUser).toHaveProperty('_id')
     expect(newUser).toHaveProperty('email', user.email)
     expect(newUser).toHaveProperty('username', user.username)
+    expect(await newUser.comparePassword(user.password)).toBe(true)
 
     await mongodb.disconnect()
 

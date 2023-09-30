@@ -6,7 +6,7 @@ export interface IUserRepository extends IRepository {
 }
 
 export class UserRepository implements IRepository {
-  public async create(user: IUser): Promise<IUser> {
+  public async create(user: IUser) {
     try {
       const newUser = new UserModel({
         email: user.email,
