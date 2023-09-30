@@ -1,15 +1,15 @@
-import { afterAll, beforeAll, spyOn } from 'bun:test'
+import { afterEach, beforeEach } from 'bun:test'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 
-let mongod: MongoMemoryServer
+export let mongod: MongoMemoryServer
 
-beforeAll(async () => {
+beforeEach(async () => {
   mongod = await MongoMemoryServer.create()
   const uri = mongod.getUri()
 
   process.env.MONGODB_URI = uri
 })
 
-afterAll(async () => {
+afterEach(async () => {
   await mongod.stop()
 })

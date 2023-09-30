@@ -32,6 +32,8 @@ export class MongoDBConnector implements DBConnector {
   public async disconnect() {
     await mongoose.disconnect()
 
+    console.debug('MongoDB disconnected')
+
     this.isConnected = false
   }
 }

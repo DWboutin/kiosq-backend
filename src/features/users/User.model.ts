@@ -1,16 +1,17 @@
-import { Document, Model, Schema, model, models } from 'mongoose'
+import {
+  Document,
+  InferSchemaType,
+  Model,
+  Schema,
+  model,
+  models,
+} from 'mongoose'
 import Bun from 'bun'
 
 export interface IUser {
   email: string
   username: string
   password: string
-}
-
-export interface IUserDocument extends IUser, Document {
-  createdAt: Date
-  updatedAt: Date
-  comparePassword(password: string): Promise<boolean>
 }
 
 export const usernameRegexp =
@@ -30,28 +31,35 @@ type IUserMethods = {
   comparePassword(password: string): Promise<boolean>
 }
 
-export type TUserModel = Model<IUser, {}, IUserMethods>
+const userSchema = new Schema(
+  {
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      match: [usernameRegexp, usernameRegexpError],
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: [12, 'Password should be at least 12 characters long'],
+      maxlength: [32, 'Password should not exceed 32 characters long'],
+      match: [passwordRegexp, passwordRegexpError],
+    },
+  },
+  { timestamps: true },
+)
 
-const userSchema = new Schema<IUser, TUserModel, IUserMethods>({
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-    match: [usernameRegexp, usernameRegexpError],
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: [12, 'Password should be at least 12 characters long'],
-    maxlength: [32, 'Password should not exceed 32 characters long'],
-    match: [passwordRegexp, passwordRegexpError],
-  },
-})
+export type User = InferSchemaType<typeof userSchema>
+export interface IUserDocument extends User, Document {
+  comparePassword(password: string): Promise<boolean>
+}
+export type TUserModel = Model<User, {}, IUserMethods>
 
 userSchema.pre('save', async function (this: IUserDocument, next) {
   const user = this
@@ -73,4 +81,4 @@ userSchema.method('comparePassword', async function (password: string) {
   return await Bun.password.verify(password, user.password)
 })
 
-export const UserModel = model<IUser, TUserModel>('User', userSchema)
+export const UserModel = model<User, TUserModel>('User', userSchema)
