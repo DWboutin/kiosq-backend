@@ -12,14 +12,8 @@ export class MongoDBConnector implements DBConnector {
 
   public getDBUri() {
     const dbUri = EnvVariableGetter.get('MONGODB_URI')
-    const dbUsername = EnvVariableGetter.get('MONGODB_USERNAME')
-    const dbPassword = EnvVariableGetter.get('MONGODB_PASSWORD')
-    const dbName = EnvVariableGetter.get('MONGODB_DB_NAME')
 
     return dbUri
-      .replace('<username>', dbUsername)
-      .replace('<password>', dbPassword)
-      .replace('<dbName>', dbName)
   }
 
   public async initConnection(uri: string) {

@@ -5,19 +5,6 @@ import { UserRepository } from '@/features/users/UserRepository'
 import { IUser } from '@/features/users/User.model'
 
 describe('UserRepository', () => {
-  let mongod: MongoMemoryServer
-
-  beforeAll(async () => {
-    mongod = await MongoMemoryServer.create()
-    const uri = mongod.getUri()
-
-    spyOn(MongoDBConnector.prototype, 'getDBUri').mockReturnValue(uri)
-  })
-
-  afterAll(async () => {
-    await mongod.stop()
-  })
-
   it('should create a new user', async (done) => {
     const user: IUser = {
       email: 'test@test.com',

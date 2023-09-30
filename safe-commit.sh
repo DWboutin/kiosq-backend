@@ -6,7 +6,7 @@ if [[ -z "${DISABLE_SAFE_COMMIT}" ]]; then
 
   read -p "${bold}${green}Do you want to run your tests (y/N)?${normal}" CONT
   if [ "$CONT" = "y" ]; then
-    bun test
+    bun run tests
   else
     echo "keep going";
   fi

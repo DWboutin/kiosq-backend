@@ -5,6 +5,7 @@
   "scripts": {
     "start": "bun run index.ts",
     "dev": "bun --hot run index.ts",
+    "tests": "bun test --preload ./src/tests/setup.ts",
     "prepare": "husky install"
   },
   "devDependencies": {
