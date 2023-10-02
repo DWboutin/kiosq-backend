@@ -1,25 +1,19 @@
-import { EnvVariableGetter } from '@/utils/EnvVariableGetter'
 import mongoose from 'mongoose'
 
 export class MongoDBConnector implements DBConnector {
   public isConnected: boolean = false
 
-  constructor() {
+  constructor(
+    public dbUri: string,
+    public dbName: string,
+  ) {
     mongoose.set('strictQuery', true)
-
-    this.initConnection(this.getDBUri())
   }
 
-  public getDBUri() {
-    const dbUri = EnvVariableGetter.get('MONGODB_URI')
-
-    return dbUri
-  }
-
-  public async initConnection(uri: string) {
+  public async initConnection() {
     try {
-      await mongoose.connect(uri, {
-        dbName: 'kiosq',
+      await mongoose.connect(this.dbUri, {
+        dbName: this.dbName,
       })
 
       this.isConnected = true

@@ -25,11 +25,8 @@ describe('features > users', () => {
 
       it('should return error response', async (done) => {
         const response = await request(app).post('/users').send(user)
-        const response2 = await request(app).post('/users').send(user)
-        console.log(response.body)
-        expect(response.status).toBe(200)
-        expect(response2.status).toBe(400)
-        expect(response2.body.message).toBe('Duplicate key error')
+        expect(response.status).toBe(400)
+        expect(response.body.message).toBe('Duplicate key error')
 
         done()
       })
