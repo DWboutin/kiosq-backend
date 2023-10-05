@@ -1,14 +1,19 @@
-import { describe, expect, it } from 'bun:test'
+import { afterAll, describe, expect, it } from 'bun:test'
 import request from 'supertest'
 import { app } from '@/server'
+import mongoose from 'mongoose'
 
 describe('features > users', () => {
   describe('routes', () => {
+    afterAll(() => {
+      mongoose.connection.dropDatabase()
+    })
+
     describe('POST /users', () => {
       const user = {
-        email: 'test@test.com',
-        username: 'usernametest',
-        password: '!!test1234!!',
+        email: 'ROUTE-test@test.com',
+        username: 'ROUTEusername',
+        password: '!!ROUTEtest1234!!',
       }
 
       it('should return good response', async (done) => {

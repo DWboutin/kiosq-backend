@@ -14,10 +14,10 @@ export class UserController {
       const dbUri = EnvVariableGetter.get('MONGODB_URI')
       const dbName = EnvVariableGetter.get('MONGODB_NAME')
 
-      const mongodb = new MongoDBConnector(dbUri, dbName)
       const validator = new ZodValidator(userCreationSchema)
       validator.validate(req.body)
 
+      const mongodb = new MongoDBConnector(dbUri, dbName)
       const userRepository = new UserRepository(mongodb)
       const user = await userRepository.create(req.body as IUser)
       const response = UserFactory.formatCreationResponse(user)

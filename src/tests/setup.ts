@@ -13,5 +13,5 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
-  await mongod.stop()
+  await mongod.stop({ doCleanup: false })
 })
