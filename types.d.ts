@@ -22,3 +22,13 @@ interface IRepository {
   update: (id: string, data: any) => Promise<any>
   delete: (id: string) => Promise<any>
 }
+
+type TUserToken = {
+  id: string
+}
+
+declare namespace Express {
+  export interface Request extends Express.Request {
+    user?: TUserToken
+  }
+}

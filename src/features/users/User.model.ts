@@ -12,6 +12,7 @@ export interface IUser {
   email: string
   username: string
   password: string
+  refreshToken?: string
 }
 
 export const usernameRegexp =
@@ -50,6 +51,10 @@ const userSchema = new Schema(
       minlength: [12, 'Password should be at least 12 characters long'],
       maxlength: [32, 'Password should not exceed 32 characters long'],
       match: [passwordRegexp, passwordRegexpError],
+    },
+    refreshToken: {
+      type: String,
+      required: false,
     },
   },
   { timestamps: true },

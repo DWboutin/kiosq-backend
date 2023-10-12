@@ -4,7 +4,7 @@ export class ExceptionResponseFactory {
       code: exception.code,
       name: exception.name,
       message: exception.message,
-      stack: exception.stack,
+      stack: process.env.NODE_ENV !== 'production' ? exception.stack : undefined,
       errors: exception.errors,
     }
   }
