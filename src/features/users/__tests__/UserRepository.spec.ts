@@ -18,12 +18,7 @@ describe('features > users', () => {
 
     describe('create', () => {
       it('should create a new user', async (done) => {
-        const dbUri = EnvVariableGetter.get('MONGODB_URI')
-
-        const mongodb = new MongoDBConnector(
-          dbUri,
-          process.env.MONGODB_NAME as string,
-        )
+        const mongodb = new MongoDBConnector()
         const userRepository = new UserRepository(mongodb)
         const newUser = await userRepository.create(USER)
 
@@ -38,11 +33,7 @@ describe('features > users', () => {
       })
 
       it('should not create a new user with the same email address', async (done) => {
-        const dbUri = EnvVariableGetter.get('MONGODB_URI')
-        const mongodb = new MongoDBConnector(
-          dbUri,
-          process.env.MONGODB_NAME as string,
-        )
+        const mongodb = new MongoDBConnector()
         const userRepository = new UserRepository(mongodb)
         const creationFn = async () => {
           return await userRepository.create(USER)
@@ -56,12 +47,7 @@ describe('features > users', () => {
 
     describe('findAll', () => {
       it('should return all users', async (done) => {
-        const dbUri = EnvVariableGetter.get('MONGODB_URI')
-
-        const mongodb = new MongoDBConnector(
-          dbUri,
-          process.env.MONGODB_NAME as string,
-        )
+        const mongodb = new MongoDBConnector()
         const userRepository = new UserRepository(mongodb)
         const users = await userRepository.findAll()
 
@@ -79,12 +65,7 @@ describe('features > users', () => {
 
     describe('findById', () => {
       it("should find a user by it's id", async (done) => {
-        const dbUri = EnvVariableGetter.get('MONGODB_URI')
-
-        const mongodb = new MongoDBConnector(
-          dbUri,
-          process.env.MONGODB_NAME as string,
-        )
+        const mongodb = new MongoDBConnector()
         const userRepository = new UserRepository(mongodb)
         const user = await userRepository.findById(CREATED_USER._id)
 
@@ -99,12 +80,7 @@ describe('features > users', () => {
       })
 
       it('should return null when trying to find a user by an nonexistent id', async (done) => {
-        const dbUri = EnvVariableGetter.get('MONGODB_URI')
-
-        const mongodb = new MongoDBConnector(
-          dbUri,
-          process.env.MONGODB_NAME as string,
-        )
+        const mongodb = new MongoDBConnector()
         const userRepository = new UserRepository(mongodb)
         const user = await userRepository.findById(new ObjectId().toString())
 
@@ -118,10 +94,7 @@ describe('features > users', () => {
       it("should update the user's username", async (done) => {
         const dbUri = EnvVariableGetter.get('MONGODB_URI')
 
-        const mongodb = new MongoDBConnector(
-          dbUri,
-          process.env.MONGODB_NAME as string,
-        )
+        const mongodb = new MongoDBConnector()
         const userRepository = new UserRepository(mongodb)
         const user = (await userRepository.update(CREATED_USER._id, {
           username: NEW_USERNAME,
@@ -141,12 +114,7 @@ describe('features > users', () => {
 
     describe('login', () => {
       it('should return the user from the email and password', async (done) => {
-        const dbUri = EnvVariableGetter.get('MONGODB_URI')
-
-        const mongodb = new MongoDBConnector(
-          dbUri,
-          process.env.MONGODB_NAME as string,
-        )
+        const mongodb = new MongoDBConnector()
         const userRepository = new UserRepository(mongodb)
         const user = await userRepository.login(USER.email, USER.password)
 
@@ -158,12 +126,7 @@ describe('features > users', () => {
       })
 
       it('should return null when user log in with a wrong password', async (done) => {
-        const dbUri = EnvVariableGetter.get('MONGODB_URI')
-
-        const mongodb = new MongoDBConnector(
-          dbUri,
-          process.env.MONGODB_NAME as string,
-        )
+        const mongodb = new MongoDBConnector()
         const userRepository = new UserRepository(mongodb)
         const user = await userRepository.login(USER.email, 'wrong password')
 
@@ -173,12 +136,7 @@ describe('features > users', () => {
       })
 
       it('should return null when user log in with a wrong email', async (done) => {
-        const dbUri = EnvVariableGetter.get('MONGODB_URI')
-
-        const mongodb = new MongoDBConnector(
-          dbUri,
-          process.env.MONGODB_NAME as string,
-        )
+        const mongodb = new MongoDBConnector()
         const userRepository = new UserRepository(mongodb)
         const user = await userRepository.login('wrong email', USER.password)
 
@@ -190,12 +148,7 @@ describe('features > users', () => {
 
     describe('delete', () => {
       it("should delete a user from it's id and return the deleted user", async (done) => {
-        const dbUri = EnvVariableGetter.get('MONGODB_URI')
-
-        const mongodb = new MongoDBConnector(
-          dbUri,
-          process.env.MONGODB_NAME as string,
-        )
+        const mongodb = new MongoDBConnector()
         const userRepository = new UserRepository(mongodb)
         const user = await userRepository.delete(CREATED_USER._id)
         const users = await userRepository.findAll()

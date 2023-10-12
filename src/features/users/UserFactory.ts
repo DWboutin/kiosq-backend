@@ -1,17 +1,16 @@
 import { IUserDocument } from '@/features/users/User.model'
-import { ObjectId } from 'mongodb'
 
-export type TCreatedUser = Pick<
+export type TUser = Pick<
   IUserDocument,
   'email' | 'username' | 'createdAt' | 'updatedAt'
 > & {
-  id: ObjectId
+  id: string
 }
 
 export class UserFactory {
-  static formatCreationResponse(user: IUserDocument): TCreatedUser {
+  static formatUserResponse(user: IUserDocument): TUser {
     return {
-      id: user._id,
+      id: user._id.toString(),
       email: user.email,
       username: user.username,
       createdAt: user.createdAt,
