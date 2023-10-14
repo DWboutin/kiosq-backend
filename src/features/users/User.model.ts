@@ -1,11 +1,4 @@
-import {
-  Document,
-  InferSchemaType,
-  Model,
-  Schema,
-  model,
-  models,
-} from 'mongoose'
+import { Document, InferSchemaType, Model, Schema, model } from 'mongoose'
 import Bun from 'bun'
 
 export interface IUser {
@@ -15,14 +8,12 @@ export interface IUser {
   refreshToken?: string
 }
 
-export const usernameRegexp =
-  /^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/
+export const usernameRegexp = /^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/
 
 export const usernameRegexpError =
   'Username invalid, it should contain 8-20 alphanumeric characters and be unique!'
 
-export const passwordRegexp =
-  /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/
+export const passwordRegexp = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/
 
 export const passwordRegexpError =
   'Password invalid, it should contain at least one letter, one number and one special character'
