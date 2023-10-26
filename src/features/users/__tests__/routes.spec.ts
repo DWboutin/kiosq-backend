@@ -114,14 +114,10 @@ describe('features > users', () => {
       })
 
       it('should return error response on missing token', async (done) => {
-        try {
-          const response = await request(app).post('/users/refresh-token')
+        const response = await request(app).post('/users/refresh-token')
 
-          expect(response.status).toBe(400)
-          expect(response.body.message).toBe('Authorization is missing')
-        } catch (err) {
-          console.log(err)
-        }
+        expect(response.status).toBe(400)
+        expect(response.body.message).toBe('Authorization is missing')
 
         done()
       })
