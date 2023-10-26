@@ -1,12 +1,19 @@
-import { afterAll, describe, expect, it } from 'bun:test'
+import { afterAll, afterEach, describe, expect, it } from 'bun:test'
 import request from 'supertest'
-import { app } from '@/server'
 import mongoose from 'mongoose'
 import { EnvVariableGetter } from '@/utils/EnvVariableGetter'
 import { generateJWTToken } from '@/utils/generateJWTTokens'
 import { ObjectId } from 'mongodb'
+import { createAppForRouter } from '@/tests/createAppForRouter'
+import { usersRoutes } from '@/features/users/routes'
 
 describe('features > users', () => {
+  const { app, server } = createAppForRouter('/users', usersRoutes)
+
+  afterEach(() => {
+    server.close()
+  })
+
   describe('routes', () => {
     const user = {
       email: 'ROUTE-test@test.com',
