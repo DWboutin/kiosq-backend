@@ -19,9 +19,56 @@ export class ProductController {
       const mongodb = new MongoDBConnector()
       const productRepository = new ProductRepository(mongodb)
       const product = await productRepository.create(productData as IProduct)
-      const response = ProductFactory.formatProductResponse(product)
 
       await mongodb.disconnect()
+
+      const response = ProductFactory.formatProductResponse(product)
+
+      res.status(200).send(response)
+      return
+    } catch (err: any) {
+      const errorResponse = ExceptionResponseFactory.createFromException(err)
+
+      res.status(400).send(errorResponse)
+      return
+    }
+  }
+
+  static async findAll(req: Request, res: Response) {
+    try {
+      const mongodb = new MongoDBConnector()
+      const productRepository = new ProductRepository(mongodb)
+      const products = await productRepository.findAll()
+
+      await mongodb.disconnect()
+
+      const response = ProductFactory.formatProductsResponse(products)
+
+      res.status(200).send(response)
+      return
+    } catch (err: any) {
+      const errorResponse = ExceptionResponseFactory.createFromException(err)
+
+      res.status(400).send(errorResponse)
+      return
+    }
+  }
+
+  static async findById(req: Request, res: Response) {
+    try {
+      const productId = req.params.id
+      const mongodb = new MongoDBConnector()
+      const productRepository = new ProductRepository(mongodb)
+      const product = await productRepository.findById(productId)
+
+      await mongodb.disconnect()
+
+      if (product === null) {
+        res.status(404).send('Not found')
+        return
+      }
+
+      const response = ProductFactory.formatProductResponse(product)
 
       res.status(200).send(response)
       return

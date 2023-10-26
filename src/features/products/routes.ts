@@ -9,13 +9,22 @@ import { ProductCategoryTypeVarietyController } from '@/features/products/Produc
 import { ProductController } from '@/features/products/ProductController'
 import { authenticatedRoute } from '@/middlewares/authenticatedRoute'
 
-export const productsRoutes = express.Router()
+export const productsProtectedRoutes = express.Router()
 
-productsRoutes.post('/', authenticatedRoute, ProductController.create)
-productsRoutes.post('/category', authenticatedRoute, ProductCategoryController.create)
-productsRoutes.post('/category-type', authenticatedRoute, ProductCategoryTypeController.create)
-productsRoutes.post(
+productsProtectedRoutes.post('/', authenticatedRoute, ProductController.create)
+productsProtectedRoutes.post('/category', authenticatedRoute, ProductCategoryController.create)
+productsProtectedRoutes.post(
+  '/category-type',
+  authenticatedRoute,
+  ProductCategoryTypeController.create,
+)
+productsProtectedRoutes.post(
   '/category-type-variety',
   authenticatedRoute,
   ProductCategoryTypeVarietyController.create,
 )
+
+export const productsRoutes = express.Router()
+
+productsRoutes.get('/', ProductController.findAll)
+productsRoutes.get('/:id', ProductController.findById)

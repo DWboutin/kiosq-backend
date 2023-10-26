@@ -2,8 +2,6 @@ import { describe, expect, it } from 'bun:test'
 import { MongoDBConnector } from '@/database/MongoDBConnector'
 import { UserRepository } from '@/features/users/UserRepository'
 import { IUser, IUserDocument } from '@/features/users/User.model'
-import { EnvVariableGetter } from '@/utils/EnvVariableGetter'
-import mongoose from 'mongoose'
 import { ObjectId } from 'mongodb'
 
 describe('features > users', () => {
@@ -92,8 +90,6 @@ describe('features > users', () => {
 
     describe('update', () => {
       it("should update the user's username", async (done) => {
-        const dbUri = EnvVariableGetter.get('MONGODB_URI')
-
         const mongodb = new MongoDBConnector()
         const userRepository = new UserRepository(mongodb)
         const user = (await userRepository.update(CREATED_USER._id, {

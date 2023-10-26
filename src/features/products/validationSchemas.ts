@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb'
 import { z } from 'zod'
 
 const productDescription = z
@@ -10,11 +11,37 @@ const productInfoNameValidator = z
   .min(2, { message: 'Minimum 2 characters' })
   .max(32, { message: 'Maximum 32 characters' })
 
+const mongodDbIdSchema = z.custom((value) => ObjectId.isValid(value as string), {
+  message: 'Invalid MongoDB ID',
+})
+
+const productPricingType = z.union([z.literal('bulk'), z.literal('pack'), z.literal('unit')])
+const productPricingPer = z.union([
+  z.literal('kg'),
+  z.literal('g'),
+  z.literal('l'),
+  z.literal('ml'),
+  z.literal('unit'),
+  z.number(),
+])
+
+const pricingSchema = z
+  .array(
+    z.object({
+      type: productPricingType,
+      per: productPricingPer,
+      price: z.number(),
+      currency: z.string(),
+    }),
+  )
+  .optional()
+
 export const productSchema = z.object({
-  category: z.string(),
-  type: z.string(),
-  variety: z.string(),
+  category: mongodDbIdSchema,
+  type: mongodDbIdSchema,
+  variety: mongodDbIdSchema,
   description: productDescription,
+  pricing: pricingSchema,
 })
 
 export const productCategorySchema = z.object({
@@ -23,10 +50,10 @@ export const productCategorySchema = z.object({
 
 export const productCategoryTypeSchema = z.object({
   name: productInfoNameValidator,
-  category: z.string(),
+  category: mongodDbIdSchema,
 })
 
 export const productCategoryTypeVarietySchema = z.object({
   name: productInfoNameValidator,
-  type: z.string(),
+  type: mongodDbIdSchema,
 })

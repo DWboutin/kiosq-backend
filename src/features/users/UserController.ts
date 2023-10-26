@@ -83,7 +83,8 @@ export class UserController {
     const token = authHeader && authHeader.split(' ')[1]
 
     if (!token) {
-      return res.status(400).json({ message: 'Authorization is missing' })
+      res.status(400).json({ message: 'Authorization is missing' })
+      return
     }
 
     try {

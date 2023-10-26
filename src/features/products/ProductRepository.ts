@@ -1,5 +1,6 @@
 import { IProduct, IProductDocument, ProductModel } from '@/features/products/Product.model'
 import { WithDB } from '@/utils/decorators/WithDB'
+import { ObjectId } from 'mongodb'
 
 export interface IProductRepository extends IRepository {
   create(productCategory: IProduct): Promise<IProductDocument>
@@ -13,18 +14,25 @@ export interface IProductRepository extends IRepository {
   delete(id: string): Promise<IProductDocument | null>
 }
 
+export type IProductDocumentPopulated = IProductDocument & {
+  category: { _id: ObjectId; name: string }
+  type: { _id: ObjectId; name: string }
+  variety: { _id: ObjectId; name: string }
+  owner: { _id: ObjectId; name: string }
+}
+
 @WithDB
 export class ProductRepository implements IProductRepository {
   constructor(private dbConnector: DBConnector) {}
 
-  public async create(product: IProduct): Promise<IProductDocument> {
-    console.log({ product })
+  public async create(product: IProduct): Promise<IProductDocumentPopulated> {
     const newProduct = new ProductModel({
       description: product.description,
       category: product.category,
       type: product.type,
       variety: product.variety,
       owner: product.owner,
+      pricing: product.pricing,
     })
     const savedProduct = await newProduct.save()
 
@@ -41,20 +49,29 @@ export class ProductRepository implements IProductRepository {
         path: 'variety',
         select: 'name',
       },
+      {
+        path: 'owner',
+        select: 'username',
+      },
     ])
   }
 
-  public async findAll(): Promise<IProductDocument[]> {
+  public async findAll(): Promise<IProductDocumentPopulated[]> {
     const products = await ProductModel.find()
-      .populate('category')
-      .populate('type')
-      .populate('variety')
+      .populate('category', 'name')
+      .populate('type', 'name')
+      .populate('variety', 'name')
+      .populate('owner', 'username')
 
-    return products
+    return products as IProductDocumentPopulated[]
   }
 
-  public async findById(id: string): Promise<IProductDocument | null> {
+  public async findById(id: string): Promise<IProductDocumentPopulated | null> {
     return await ProductModel.findById(id)
+      .populate('category', 'name')
+      .populate('type', 'name')
+      .populate('variety', 'name')
+      .populate('owner', 'username')
   }
 
   public async findByCategoryId(categoryId: string): Promise<IProductDocument[] | null> {

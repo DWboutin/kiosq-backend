@@ -1,12 +1,13 @@
 import { usersRoutes } from '@/features/users/routes'
-import { productsRoutes } from '@/features/products/routes'
+import { productsProtectedRoutes, productsRoutes } from '@/features/products/routes'
 import { authenticatedRoute } from '@/middlewares/authenticatedRoute'
 import express from 'express'
 
 const routes = express.Router()
 
 routes.use('/users', usersRoutes)
-routes.use('/kiosq/products', productsRoutes)
+routes.use('/kiosq/products', productsProtectedRoutes)
+routes.use('/products', productsRoutes)
 
 routes.get('/', (req, res) => {
   res.send('Hello world!')
