@@ -6,8 +6,8 @@ import express from 'express'
 const routes = express.Router()
 
 routes.use('/users', usersRoutes)
-routes.use('/kiosq/products', productsProtectedRoutes)
-routes.use('/products', productsRoutes)
+// routes.use('/kiosq/products', productsProtectedRoutes)
+// routes.use('/products', productsRoutes)
 
 routes.get('/', (req, res) => {
   res.send('Hello world!')
